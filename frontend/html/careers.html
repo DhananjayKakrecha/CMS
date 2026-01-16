@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Careers</title>
+    <link rel="stylesheet" href="/static/css/main.css" />
+  </head>
+  <body>
+    <div id="navbar"></div>
+
+    <div class="page">
+      <div class="page-header">
+        <h2>Careers</h2>
+        <button id="addCareerBtn" onclick="openCareerModal()">
+          + Add Career
+        </button>
+      </div>
+
+      <table id="careersTable">
+        <thead>
+          <tr>
+            <th>Icon</th>
+            <th>Title</th>
+            <th>One-line</th>
+            <th>Updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Modal -->
+    <div id="careerModal" class="modal hidden">
+      <div class="modal-content large">
+        <h3 id="careerModalTitle">Add Career</h3>
+
+        <input id="title" placeholder="Title" />
+        <input id="one_line_desc" placeholder="One-line description" />
+
+        <textarea
+          id="freshers_desc"
+          placeholder="Freshers description"
+        ></textarea>
+        <textarea
+          id="experienced_desc"
+          placeholder="Experienced description"
+        ></textarea>
+
+        <textarea id="svg_d_value" placeholder="SVG path d value"></textarea>
+
+        <div class="svg-preview">
+          <svg width="60" height="60" viewBox="0 0 24 24">
+            <path id="svgPreviewPath" d=""></path>
+          </svg>
+        </div>
+
+        <div class="modal-actions">
+          <button onclick="saveCareer()">Save</button>
+          <button onclick="closeCareerModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <div id="toast" class="toast hidden"></div>
+    <div id="loader" class="loader hidden">Loading...</div>
+
+    <script src="/static/js/guards.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/careers.js"></script>
+
+    <script>
+      requireAuth();
+
+      const token = localStorage.getItem("access_token");
+      const payload = JSON.parse(atob(token.split(".")[1]));
+
+      renderNavbar(payload.role);
+
+      if (payload.role === "ADMIN" && payload.can_access === false) {
+        document.getElementById("addCareerBtn").disabled = true;
+      }
+
+      loadCareers();
+    </script>
+  </body>
+</html>

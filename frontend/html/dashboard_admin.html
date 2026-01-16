@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/css/main.css" />
+  </head>
+  <body>
+    <div id="navbar"></div>
+
+    <div class="page">
+      <h2>Welcome, Admin</h2>
+      <p>Manage website content from here.</p>
+
+      <p id="blockedMsg" class="warning" style="display: none">
+        Your CMS access is currently disabled.
+      </p>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <div id="loader" class="loader hidden">Loading...</div>
+    <script src="/static/js/guards.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script>
+      requireAuth();
+
+      const token = localStorage.getItem("access_token");
+      const payload = JSON.parse(atob(token.split(".")[1]));
+
+      if (payload.role !== "ADMIN") {
+        window.location.href = "/login/";
+      }
+
+      renderNavbar("ADMIN");
+
+      if (payload.can_access === false) {
+        document.getElementById("blockedMsg").style.display = "block";
+      }
+    </script>
+  </body>
+</html>
